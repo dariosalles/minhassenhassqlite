@@ -43,7 +43,8 @@ static Database _database;
 
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'pass.db';
+    String path = directory.path + '/pass.db';
+    print(path);
 
     var senhasDatabase = await openDatabase(path, version: 1, onCreate: _createDb);
     return senhasDatabase;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqlite/helpers/database_helper.dart';
 import 'package:sqlite/models/senhas.dart';
-import 'package:sqlite/pages/cadastro_page.dart';
 import 'package:sqlite/pages/senha_page.dart';
 
 import 'drawer_page.dart';
@@ -20,9 +19,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    //Senhas c = Senhas(2,2,'Social','dariosalles@gmail.com','12345678','Teste2','2020-06-05 18:41','S');
+    //Senhas c = Senhas(1,1,'Jogos','dariosalles@gmail.com','12345678','Teste2','2020-06-05 18:41','S');
     //db.insertSenha(c);
-
 //    db.getSenhas().then((lista) {
 //
 //      print(lista);
