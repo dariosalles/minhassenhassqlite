@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sqlite/helpers/database_helper.dart';
 import 'package:sqlite/models/senhas.dart';
+import 'package:intl/intl.dart';
+
 
 class SenhaPage extends StatefulWidget {
 
@@ -13,6 +18,58 @@ class SenhaPage extends StatefulWidget {
 
 class _SenhaPageState extends State<SenhaPage> {
 
+//  DataBaseHelper db = DataBaseHelper();
+
+//  count() async {
+//
+//    await db.getCount().then((valor) {
+//      int pid = valor;
+//      //print(pid);
+//      return pid;
+//    });
+//
+//
+//  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd kk:mm').format(now);
+
+    if(widget.senha == null) {
+
+      print('Inserção');
+
+      _editaSenha = Senhas(null, "", "", "", "", formattedDate, "S");
+
+
+    }else{
+
+      print('Edição');
+      _editaSenha = Senhas.fromMap(widget.senha.toMap());
+      //print(_editaSenha);
+      _categoriaController.text = _editaSenha.categoria;
+      _loginController.text = _editaSenha.login;
+      _senhaController.text = _editaSenha.senha;
+      _obsController.text = _editaSenha.obs;
+
+      setState(() {
+        _selectedCategoria = _editaSenha.categoria;
+      });
+
+
+    }
+  }
+
+  //DataBaseHelper db = DataBaseHelper();
+
+//  _count() async {
+//    int count  = await db.getCount();
+//    print(count);
+//    return count;
+//  }
   // Initially password is obscure
   bool _obscureText = true;
 
@@ -23,13 +80,20 @@ class _SenhaPageState extends State<SenhaPage> {
     });
   }
 
+  //TextEditingValue _selectedCategoria = TextEditingValue();
   final _categoriaController = TextEditingController();
   final _loginController = TextEditingController();
   final _senhaController = TextEditingController();
   final _obsController = TextEditingController();
 
+  final _categoriaFocus = FocusNode();
+  final _loginFocus = FocusNode();
+  final _senhaFocus = FocusNode();
+  final _obsFocus = FocusNode();
+
   bool editado = false;
   Senhas _editaSenha;
+
 
   List<String> _categorias = ['Banco', 'Email', 'Entretenimento', 'Internet', 'Jogos', 'Outro', 'Social','Trabalho' ]; // Option 2
   String _selectedCategoria; // Option 2
@@ -51,28 +115,26 @@ class _SenhaPageState extends State<SenhaPage> {
 
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    if(widget.senha == null) {
-      _editaSenha = Senhas(0,1, "Jogos", "", "123456789", "Teste 2", "2020-06-05", "S");
-      //print('aki');
-    }else{
-      _editaSenha = Senhas.fromMap(widget.senha.toMap());
-      //print(_editaSenha);
-      _categoriaController.text = _editaSenha.categoria;
-      _loginController.text = _editaSenha.login;
-      _senhaController.text = _editaSenha.senha;
-      _obsController.text = _editaSenha.obs;
-
-      setState(() {
-        _selectedCategoria = _editaSenha.categoria;
-      });
-
-
-    }
+  //AVISO
+  void _exibeAviso() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Campos obrigatórios"),
+            content: Text("Preencha todos os campos"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Fechar"),
+                onPressed: () {
+                    Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +148,13 @@ class _SenhaPageState extends State<SenhaPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
 
+          if(_editaSenha.login != null && _editaSenha.login.isNotEmpty){
+            Navigator.pop(context, _editaSenha);
+          }else{
+            _exibeAviso();
+            FocusScope.of(context).requestFocus(_loginFocus);
+
+          }
         },
         child: Icon(Icons.save),
         backgroundColor: Colors.indigo,
@@ -94,12 +163,21 @@ class _SenhaPageState extends State<SenhaPage> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
+//            Container(
+//              color: Colors.white,
+//              child: Text("ID")
+//            ),
             DropdownButton(
+              focusNode: _categoriaFocus,
+              autofocus: true,
+              focusColor: Colors.red,
               hint: Text('Selecione a categoria'), // Not necessary for Option 1
               value: _selectedCategoria,
               onChanged: (newValue) {
-                setState(() {
+
+               setState(() {
                   _selectedCategoria = newValue;
+                  _editaSenha.categoria = newValue;
                 });
               },
               items: _categorias.map((location) {
@@ -113,6 +191,7 @@ class _SenhaPageState extends State<SenhaPage> {
               color: Colors.white,
               child: TextFormField(
                 controller: _loginController,
+                focusNode: _loginFocus,
                 maxLength: 30,
                 obscureText: false,
                 style: TextStyle(
@@ -138,6 +217,7 @@ class _SenhaPageState extends State<SenhaPage> {
             Container(
               color: Colors.white,
               child: TextFormField(
+                focusNode: _senhaFocus,
                 controller: _senhaController,
                 maxLength: 30,
                 obscureText: _obscureText,
@@ -153,7 +233,6 @@ class _SenhaPageState extends State<SenhaPage> {
                       onPressed: (){
                         _toggle();
                       },
-
                       icon: Icon(
                         _obscureText ? Icons.visibility_off : Icons.visibility,
                         color: Colors.blue,
@@ -177,6 +256,7 @@ class _SenhaPageState extends State<SenhaPage> {
               padding: EdgeInsets.only(top: 20),
               child: TextField(
                 maxLines: 4,
+                focusNode: _obsFocus,
                 controller: _obsController,
                 style: TextStyle(
                     color: Colors.black,
@@ -188,7 +268,6 @@ class _SenhaPageState extends State<SenhaPage> {
                     prefixIcon: Icon(Icons.message),
                     labelStyle: TextStyle(
                       fontSize: 15,
-
                     )
                 ),
                 onChanged: (text){
@@ -198,34 +277,8 @@ class _SenhaPageState extends State<SenhaPage> {
                   });
                 },
               ),
-            ),
-//            Padding(
-//              padding: EdgeInsets.only(top: 20),
-//              child: MaterialButton(
-//                onPressed: (){
-//                  //_setCadastro();
-//                  //Navigator.pushNamed(context, '/pecas');
-//                },//since this is only a UI app
-//                child: Text('Cadastrar',
-//                  style: TextStyle(
-//                    fontSize: 15,
-//                    fontFamily: 'SFUIDisplay',
-//                    fontWeight: FontWeight.bold,
-//                  ),
-//                ),
-//                color: Colors.indigo,
-//                //color: Color(0xffff2d55),
-//                elevation: 0,
-//                minWidth: 400,
-//                height: 50,
-//                textColor: Colors.white,
-//                shape: RoundedRectangleBorder(
-//                    borderRadius: BorderRadius.circular(10)
-//                ),
-//              ),
-//            ),
+            )
           ],
-
         ),
       ),
     );

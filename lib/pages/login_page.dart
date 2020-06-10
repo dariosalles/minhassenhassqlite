@@ -288,6 +288,31 @@ class _TelaLoginState extends State<TelaLogin> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: MaterialButton(
+                    onPressed: () async {
+                      //getAcesso();
+                      Navigator.pushNamed(context, '/cadastro');
+                    },//since this is only a UI app
+                    child: Text('Primeiro Acesso?',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontFamily: 'SFUIDisplay',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    color: Colors.orange,
+                    //color: Color(0xffff2d55),
+                    elevation: 0,
+                    minWidth: 400,
+                    height: 50,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

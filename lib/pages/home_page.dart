@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    //Senhas c = Senhas(1,1,'Jogos','dariosalles@gmail.com','12345678','Teste2','2020-06-05 18:41','S');
+    //Senhas c = Senhas(3,3,'Social','silviacamilo09@gmail.com','12345678','Teste3','2020-08-05 10:56','S');
     //db.insertSenha(c);
 //    db.getSenhas().then((lista) {
 //
@@ -27,12 +27,32 @@ class _HomePageState extends State<HomePage> {
 //
 //    });
 
-  db.getSenhas().then((lista){
-    setState(() {
-      senhas = lista;
-    });
-  });
+  _exibeTodasSenhas();
 
+  }
+
+  void _exibeTodasSenhas(){
+    db.getSenhas().then((lista){
+      setState(() {
+        senhas = lista;
+      });
+    });
+  }
+
+  void _exibeSenhaPage({Senhas senha}) async {
+    final senhaRecebido = await Navigator.push(context,
+        MaterialPageRoute(builder: (context)=> SenhaPage(senha: senha))
+    );
+
+    if(senhaRecebido != null) {
+      if(senha != null) {
+        await db.updateSenha(senhaRecebido);
+
+      }else{
+        await db.insertSenha(senhaRecebido);
+      }
+      _exibeTodasSenhas();
+    }
   }
 
   @override
@@ -164,12 +184,6 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         _exibeSenhaPage(senha: senhas[index]);
       },
-    );
-  }
-
-  void _exibeSenhaPage({Senhas senha}) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context)=> SenhaPage(senha: senha))
     );
   }
 }

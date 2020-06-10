@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqlite/pages/cadastro_page.dart';
 import 'package:sqlite/pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/senha_page.dart';
@@ -12,6 +13,7 @@ void main() {
     initialRoute: "/",
     routes: {
       '/': (context) => Inicial(),
+      '/cadastro': (context) => Cadastro(),
       '/inicial': (context) => HomePage(),
       '/senha':(context) => SenhaPage()
 

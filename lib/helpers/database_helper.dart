@@ -9,10 +9,9 @@ class DataBaseHelper {
 static DataBaseHelper _dataBaseHelper;
 static Database _database;
 
-//usada para definir as colunas da tabela
+//usada para definir as colunas da tabela passwords
   String senhasTable = 'passwords';
   String colId = 'id';
-  String colId_Usuario = 'id_usuario';
   String colCategoria = 'categoria';
   String colLogin = 'login';
   String colSenha = 'senha';
@@ -21,7 +20,7 @@ static Database _database;
   String colAtivado = 'ativado';
 
 
-//construtor nomeado para criar instancia da classe
+//construtor nomeado para criar instancia da classe no padrão SINGLETON para acesso a classe de modo grobal
   DataBaseHelper._createInstance();
 
   factory DataBaseHelper(){
@@ -44,14 +43,15 @@ static Database _database;
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + '/pass.db';
-    print(path);
+    //print(path);
 
     var senhasDatabase = await openDatabase(path, version: 1, onCreate: _createDb);
+    print(senhasDatabase);
     return senhasDatabase;
   }
 
   void _createDb(Database db, int newVersion) async {
-    await db.execute('CREATE TABLE $senhasTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colId_Usuario INTEGER, $colCategoria TEXT, $colLogin TEXT, $colSenha TEXT, $colObs TEXT, $colData_Cadastro TEXT, $colAtivado TEXT)');
+    await db.execute('CREATE TABLE $senhasTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colCategoria TEXT, $colLogin TEXT, $colSenha TEXT, $colObs TEXT, $colData_Cadastro TEXT, $colAtivado TEXT)');
   }
 
   //RETORNAR UMA LISTA DE TODOS OS REGISTROS
@@ -67,10 +67,11 @@ static Database _database;
   }
 
 
-  //INCLUIR UM OBJETO SENHA NO BANCO DE DADOS
+  //INCLUIR UM OBJETO SENHA NO BANCO DE DADOS CONVERTIDO PRA MAP
   Future<int> insertSenha(Senhas senha) async {
     Database db = await this.database;
     var resultado = await db.insert(senhasTable, senha.toMap());
+    //print(resultado);
     return resultado;
   }
 
@@ -79,7 +80,7 @@ static Database _database;
     Database db = await this.database;
 
     List<Map> maps = await db.query(senhasTable,
-    columns: [colId, colId_Usuario, colCategoria, colLogin, colSenha, colObs, colData_Cadastro, colAtivado],
+    columns: [colId, colCategoria, colLogin, colSenha, colObs, colData_Cadastro, colAtivado],
     where: "$colId = ?",
     whereArgs: [id]);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuDrawer extends StatefulWidget {
   @override
@@ -28,25 +29,25 @@ class _MenuDrawerState extends State<MenuDrawer> {
 //    //print('Email depois $email');
 //  }
 //
-//  _logout() async {
-//
-//    SharedPreferences sp = await SharedPreferences.getInstance();
-//    bool rememberMe = sp.getBool('lembrarme');
-//    print('Logout $rememberMe');
-//
-//    if(rememberMe == true) {
-//      setState(() {
-//        sp.setBool('lembrarme', false);
-//        rememberMe = false;
-//      });
-//    }
-//    print('Logout $rememberMe');
-//    print('Sair Logout');
-//
-//
-//    Navigator.pushNamed(context, '/');
-//
-//  }
+  _logout() async {
+
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool rememberMe = sp.getBool('lembrarme');
+    print('Logout $rememberMe');
+
+    if(rememberMe == true) {
+      setState(() {
+        sp.setBool('lembrarme', false);
+        rememberMe = false;
+      });
+    }
+    print('Logout $rememberMe');
+    print('Sair Logout');
+
+
+    Navigator.pushNamed(context, '/');
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +114,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                         iconSize: 30,
                         tooltip: 'Sair',
                         onPressed: () async{
-                          //_logout();
+                          _logout();
                         },
                       ),
                       Text("Sair (Logout)",
