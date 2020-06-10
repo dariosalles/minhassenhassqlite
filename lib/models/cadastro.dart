@@ -2,15 +2,19 @@ class Cadastro {
   String nome;
   String email;
   String senha;
+  String data_cadastro;
+  String ativado;
 
-  Cadastro(this.nome, this.email, this.senha);
+  Cadastro(this.nome, this.email, this.senha, this.data_cadastro, this.ativado);
 
   // converte Objeto para Map
   Map<String,dynamic> toMap() {
     var map = <String,dynamic> {
       'nome': nome,
       'email': email,
-      'senha': senha
+      'senha': senha,
+      'data_cadastro': data_cadastro,
+      'ativado': ativado
     };
     return map;
   }
@@ -19,6 +23,8 @@ class Cadastro {
     nome = map['nome'];
     email = map['email'];
     senha = map['senha'];
+    data_cadastro = map['data_cadastro'];
+    ativado = map['ativado'];
   }
 
 }

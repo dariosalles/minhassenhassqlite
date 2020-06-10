@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sqlite/helpers/database_helper.dart';
 import 'package:sqlite/models/senhas.dart';
 import 'package:intl/intl.dart';
 
@@ -17,19 +14,6 @@ class SenhaPage extends StatefulWidget {
 }
 
 class _SenhaPageState extends State<SenhaPage> {
-
-//  DataBaseHelper db = DataBaseHelper();
-
-//  count() async {
-//
-//    await db.getCount().then((valor) {
-//      int pid = valor;
-//      //print(pid);
-//      return pid;
-//    });
-//
-//
-//  }
 
   @override
   void initState() {
@@ -63,29 +47,20 @@ class _SenhaPageState extends State<SenhaPage> {
     }
   }
 
-  //DataBaseHelper db = DataBaseHelper();
-
-//  _count() async {
-//    int count  = await db.getCount();
-//    print(count);
-//    return count;
-//  }
-  // Initially password is obscure
+  // INICIALMENTE A SENHA É OBSCURE
   bool _obscureText = true;
 
-  // Toggles the password show status
+  // ALTERNA A VISIBILIDADE DA SENHA
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
 
-  //TextEditingValue _selectedCategoria = TextEditingValue();
   final _categoriaController = TextEditingController();
   final _loginController = TextEditingController();
   final _senhaController = TextEditingController();
   final _obsController = TextEditingController();
-
   final _categoriaFocus = FocusNode();
   final _loginFocus = FocusNode();
   final _senhaFocus = FocusNode();
@@ -93,7 +68,6 @@ class _SenhaPageState extends State<SenhaPage> {
 
   bool editado = false;
   Senhas _editaSenha;
-
 
   List<String> _categorias = ['Banco', 'Email', 'Entretenimento', 'Internet', 'Jogos', 'Outro', 'Social','Trabalho' ]; // Option 2
   String _selectedCategoria; // Option 2
@@ -115,7 +89,7 @@ class _SenhaPageState extends State<SenhaPage> {
 
   }
 
-  //AVISO
+  //AVISO - CADASTRO SENHA
   void _exibeAviso() {
     showDialog(
         context: context,
@@ -163,11 +137,9 @@ class _SenhaPageState extends State<SenhaPage> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-//            Container(
-//              color: Colors.white,
-//              child: Text("ID")
-//            ),
-            DropdownButton(
+          Container(
+            padding: EdgeInsets.all(10),
+            child: DropdownButton(
               focusNode: _categoriaFocus,
               autofocus: true,
               focusColor: Colors.red,
@@ -175,7 +147,7 @@ class _SenhaPageState extends State<SenhaPage> {
               value: _selectedCategoria,
               onChanged: (newValue) {
 
-               setState(() {
+                setState(() {
                   _selectedCategoria = newValue;
                   _editaSenha.categoria = newValue;
                 });
@@ -187,6 +159,8 @@ class _SenhaPageState extends State<SenhaPage> {
                 );
               }).toList(),
             ),
+          ),
+
             Container(
               color: Colors.white,
               child: TextFormField(

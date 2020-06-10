@@ -13,7 +13,7 @@ void main() {
     initialRoute: "/",
     routes: {
       '/': (context) => Inicial(),
-      '/cadastro': (context) => Cadastro(),
+      '/cadastro': (context) => CadastroPage(),
       '/inicial': (context) => HomePage(),
       '/senha':(context) => SenhaPage()
 

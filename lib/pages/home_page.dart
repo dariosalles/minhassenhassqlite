@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   }
 
+  //EXIBE TODAS SENHAS NO INICIO
   void _exibeTodasSenhas(){
     db.getSenhas().then((lista){
       setState(() {
@@ -134,7 +135,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 child: IconButton(
                   icon: Icon(Icons.remove_circle),
-                  color: Colors.indigo,
+                  color: Colors.red,
                   iconSize: 30,
                   tooltip: 'Remover',
                   onPressed: () {
@@ -142,13 +143,13 @@ class _HomePageState extends State<HomePage> {
                         builder: (context){
                           return AlertDialog(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                borderRadius: BorderRadius.all(Radius.circular(10.0))
                             ),
                             title: Text('Deseja remover o registro'),
                             titlePadding: EdgeInsets.all(20),
                             titleTextStyle: TextStyle(
                                 fontSize: 20,
-                                color: Colors.indigo
+                                color: Colors.red
                             ),
                             content: Text(senhas[index].login.toString(),
                                 textAlign: TextAlign.center),
@@ -158,9 +159,11 @@ class _HomePageState extends State<HomePage> {
                                 child: Text("Sim"),
                                 onPressed: (){
                                   print('sim');
-                                  //removeSenha(snapshot.data[indice]['id'].toString(),snapshot.data[indice]['id_usuario'].toString());
 
-                                  Navigator.pop(context);
+                                  db.deleteSenha(senhas[index].id);
+
+
+                                  Navigator.pushNamed(context, "/inicial");
                                 },
                               ),
                               RaisedButton(
